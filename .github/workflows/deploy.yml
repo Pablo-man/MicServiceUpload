@@ -27,12 +27,12 @@ jobs:
 
     - name: Deploy microservice1
       run: |
-        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run --name cli -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
+        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run -d --name cli -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
 
     - name: Deploy microservice2
       run: |
-        docker public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest && docker run --name list -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest
+        docker public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest && docker run -d --name list -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest
     
     - name: Deploy microservice3
       run: |
-        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest && docker run --name upload -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest
+        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest && docker run -d --name upload -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest
