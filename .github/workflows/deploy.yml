@@ -21,18 +21,37 @@ jobs:
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: us-east-1
 
+    - name: Stop and remove existing containers
+      run: |
+        if docker ps -a | grep -q 'cli'; then
+            docker stop cli
+            docker rm cli
+        fi
+        if docker ps -a | grep -q 'list'; then
+            docker stop list
+            docker rm list
+        fi
+        if docker ps -a | grep -q 'upload'; then
+            docker stop upload
+            docker rm upload
+        fi
+
     - name: su
       run: |
         sudo su
 
+    - name: createNetwork
+      run: |
+        docker network create mi-red
+
     - name: Deploy microservice1
       run: |
-        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run -d --name cli -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
+        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run -d --name cli --network mi-red -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
 
     - name: Deploy microservice2
       run: |
-        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest && docker run -d --name list -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest
+        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest && docker run -d --name list --network mi-red -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest
     
     - name: Deploy microservice3
       run: |
-        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest && docker run -d --name upload -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest
+        docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest && docker run -d --name upload --network mi-red -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest
