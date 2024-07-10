@@ -21,6 +21,10 @@ jobs:
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: us-east-1
 
+    - name: su
+      run: |
+        sudo su
+
     - name: Deploy microservice1
       run: |
         docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run --name cli -p 4000:4000 push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
