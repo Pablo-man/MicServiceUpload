@@ -13,6 +13,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Authenticate to Amazon ECR
+      run: |
+        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s7f4a6o3
+
     - name: Deploy microservice1
       run: |
         docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker run --name cli -p 4000:4000 push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
