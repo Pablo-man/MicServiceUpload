@@ -22,24 +22,25 @@ jobs:
 
   build-and-push:
     runs-on: self-hosted
-    needs: login
     steps:
       - uses: actions/checkout@v2
         with:
           repository: Pablo-man/MicServiceUploadImages
-          path: MicServiceUploadImages
-      - name: Login to ECR
-        run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s7f4a6o3
-  
-      - name: Build and Push CLI Microservice
-        run: |
-            docker build -t micservicecli . && docker tag micservicecli:latest public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
-        working-directory: MicServiceUploadImages/CLI
-        
+          path: MicServiceUploadImages/CLI
+      - uses: actions/checkout@v2
+      - uses: vitr/actions-build-and-upload-to-ecs@master
+        with:
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          repo: micservice/uploadimages/cli
+          region: us-east-2
+          tags: latest,${{ github.sha }}
+          create_repo: true
+
   stop-and-remove:
     runs-on: self-hosted
-    needs: build-and-push
+    needs: login
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
