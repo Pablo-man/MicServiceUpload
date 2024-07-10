@@ -24,12 +24,16 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-      - name: cd CLI
-        working-directory: ./CLI
+        with:
+          repository: Pablo-man/MicServiceUploadImages
+          path: MicServiceUploadImages            
+      - name: Build and Push CLI Microservice
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
-
+            docker build -t micservicecli . \
+            && docker tag micservicecli:latest public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest \
+            && docker push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
+        working-directory: MicServiceUploadImages/CLI
+        
   stop-and-remove:
     runs-on: self-hosted
     needs: login
