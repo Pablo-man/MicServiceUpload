@@ -27,7 +27,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: Pablo-man/MicServiceUploadImages
-          path: MicServiceUploadImages  
+          path: MicServiceUploadImages
+      - name: Login to ECR
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s7f4a6o3
+  
       - name: Build and Push CLI Microservice
         run: |
             docker build -t micservicecli . && docker tag micservicecli:latest public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
