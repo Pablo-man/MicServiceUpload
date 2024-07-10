@@ -13,6 +13,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Deploy microservice1
+      run: |
+        sudo su
+
     - name: 'Get Login to AWS ECR'
       id: ecr-login
       uses: thalesvon/ecr-login@master
@@ -25,11 +29,6 @@ jobs:
         args: 'get-login --no-include-email --region ${AWS_REGION}'
     - name: 'Docker Login'
       run: ${{ steps. ecr-login.outputs.login-string }}
-
-    - name: Deploy microservice1
-      run: |
-        sudo su
-
 
     - name: Deploy microservice1
       run: |
