@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello</title>
+    <%- include('partials/head') %>
+</head>
+<body>
+
+    <div class="container text-center mt-2">
+        <h1>Image</h1>
+    </div>
+
+    <div class="container mt-1">
+        <div class="card">
+            <div class="card-header">
+                <h4>Upload Your Image</h4>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="imageUpload">Choose your image:</label>
+                        <input type="file" class="form-control-file" id="photo" name="photo">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <form action="/list" method="GET">
+                <button type="submit">Listar Productos</button>
+            </form>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,6 @@
+/CLI/node_modules/
+/LIST/node_modules/
+/UPLOAD/node_modules/
+/CLI/.env
+/LIST/.env
+/UPLOAD/.env

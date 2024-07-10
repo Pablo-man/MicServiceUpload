@@ -1,0 +1,18 @@
+services:
+  list:
+    image: micservicelist
+    ports:
+      - "9000:9000"
+  
+  upload:
+    image: micserviceupload
+    ports:
+      - "5000:5000"
+  
+  cli:
+    image: micservicecli
+    ports:
+      - "4000:4000"
+    depends_on:
+      - list
+      - upload
