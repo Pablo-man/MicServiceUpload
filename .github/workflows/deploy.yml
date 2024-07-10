@@ -27,11 +27,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: Pablo-man/MicServiceUploadImages
-          path: MicServiceUploadImages
-      - name: Build and Push CLI Microservice
-        run: |
-            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s7f4a6o3
-        working-directory: MicServiceUploadImages/CLI      
+          path: MicServiceUploadImages  
       - name: Build and Push CLI Microservice
         run: |
             docker build -t micservicecli . \
@@ -41,7 +37,7 @@ jobs:
         
   stop-and-remove:
     runs-on: self-hosted
-    needs: login
+    needs: build-and-push
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
