@@ -24,12 +24,24 @@ jobs:
     runs-on: self-hosted
     needs: login
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
           repository: Pablo-man/MicServiceUploadImages
           path: MicServiceUploadImages/CLI
-      - uses: actions/checkout@v2
-      - uses: vitr/actions-build-and-upload-to-ecs@master
+
+      - name: Build and Push CLI Microservice
+        run: |
+          docker build -t micservicecli . \
+          && docker tag micservicecli:latest public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest \
+          && docker push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
+        working-directory: MicServiceUploadImages/CLI
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Build and Push using vitr/actions-build-and-upload-to-ecs
+        uses: vitr/actions-build-and-upload-to-ecs@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -38,6 +50,9 @@ jobs:
           region: us-east-2
           tags: latest,${{ github.sha }}
           create_repo: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   stop-and-remove:
     runs-on: self-hosted
