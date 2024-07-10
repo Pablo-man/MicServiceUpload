@@ -19,23 +19,10 @@ jobs:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: us-east-1
-  
-  build-and-push:
-    runs-on: self-hosted
-    needs: login
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: Pablo-man/MicServiceUploadImages
-          path: MicServiceUploadImages  
-      - name: Build and Push CLI Microservice
-        run: |
-            docker build -t micservicecli . && docker tag micservicecli:latest public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && docker push public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
-        working-directory: MicServiceUploadImages/CLI
 
   stop-and-remove:
     runs-on: self-hosted
-    needs: build-and-push
+    needs: login
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -68,15 +55,15 @@ jobs:
 
       - name: Deploy microservice1
         run: |
-          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest && \
-          docker run -d --name cli --network mi-red -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli:latest
+          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli@sha256:075b1aa3ecec290eb32cb8f6c99f2aaca1f4c0a6910b54a3f9939750265ac9df && \
+          docker run -d --name cli --network mi-red -p 4000:4000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/cli@sha256:075b1aa3ecec290eb32cb8f6c99f2aaca1f4c0a6910b54a3f9939750265ac9df
 
       - name: Deploy microservice2
         run: |
-          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest && \
-          docker run -d --name list --network mi-red -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list:latest
+          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/list@sha256:b02809a481a6a31c73340d5a2c100ccdc32ce39a06e875db6fe5f671f4dfe9d8 && \
+          docker run -d --name list --network mi-red -p 9000:9000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/list@sha256:b02809a481a6a31c73340d5a2c100ccdc32ce39a06e875db6fe5f671f4dfe9d8
 
       - name: Deploy microservice3
         run: |
-          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest && \
-          docker run -d --name upload --network mi-red -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload:latest
+          docker pull public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload@sha256:630546a86990e62532690788326ade4471179bcec57b7b8102468201ca999ad7 && \
+          docker run -d --name upload --network mi-red -p 5000:5000 public.ecr.aws/s7f4a6o3/micservice/uploadimages/upload@sha256:630546a86990e62532690788326ade4471179bcec57b7b8102468201ca999ad7
